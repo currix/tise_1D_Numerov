@@ -1,0 +1,7 @@
+Fortran 90 code to compute the eigenvalues and eigenvectors of a 
+1D potential solving the Schroedinger equation using a Numerov 
+approximation. 
+
+Makes use of minpack and intlib libraries.
+
+by Currix TM

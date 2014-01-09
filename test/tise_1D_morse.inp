@@ -1,0 +1,16 @@
+#
+#       INPUT FILE FOR tise_1D_morse 
+#
+&INP_DEBUG iprint = 1 /
+#
+&INP_X     x_min = -5.0, x_max = 30.0, npoints = 703 /
+#
+#                             V0 (MeV)   a (fm-1)  
+&INP_POTENTIAL    param_pot =  61.25,   0.477860, 0.0, 0.0, 0.0 /
+#
+&INP_SYSTEM  red_mass = 0.947 /
+#
+&INP_NUMEROV match_p = 101, tol_minpack = 1.0e-06, tol_wf = 1.0e-01, delta_engy = 0.2 /
+#
+&INP_OUTPUT  i_wf_save = 1, wf_filename = 'eigenvec_morse.dat', i_e_save = 1, e_filename = 'eigenval_morse.dat' /
+
