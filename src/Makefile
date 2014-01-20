@@ -64,7 +64,7 @@ tise_1D_wsaxon: $(tise_1D_wsaxon_OBJ)
 	$(FC) -o $(BINPATH)/tise_1D_wsaxon  $(tise_1D_wsaxon_OBJ) $(LIBS) 
 #######################
 clean:
-	@rm -f $(tise_1D_morse_OBJ) $(tise_1D_pteller_OBJ) $(tise_1D_wsaxon_OBJ)
+	@rm -f $(tise_1D_morse_OBJ) $(tise_1D_pteller_OBJ) $(tise_1D_wsaxon_OBJ) *.mod
 
 
 
