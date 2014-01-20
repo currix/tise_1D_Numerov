@@ -1,10 +1,12 @@
 MINPACK
 
+1
 Jorge More, Burton Garbow, Kenneth Hillstrom,
 User Guide for MINPACK-1,
 Technical Report ANL-80-74,
 Argonne National Laboratory, 1980.
 
+2
 Jorge More, Danny Sorenson, Burton Garbow, Kenneth Hillstrom,
 The MINPACK Project,
 in Sources and Development of Mathematical Software,
@@ -17,6 +19,7 @@ LC: QA76.95.S68.
 
 INTLIB
 
+1
 Reference:
 Philip Davis and Philip Rabinowitz,
 Methods of Numerical Integration,
