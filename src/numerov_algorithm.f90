@@ -208,6 +208,8 @@ CONTAINS
     !
     diff_val = SIGN(1.0_DP, right_val)*(temp_result(1) - temp_result(2)) !  To have a definite criteria with function signs
     !
+    iflag = 0 !  Added to remove compilation warning. No use apart of this.
+    !
   END SUBROUTINE wf_numerov_diff_min
   !
   SUBROUTINE wf_numerov(quanta, energy, wf_matrix)
