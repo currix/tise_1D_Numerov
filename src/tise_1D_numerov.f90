@@ -22,6 +22,7 @@ PROGRAM tise_1D_numerov
   REAL(KIND = DP) :: norm_val, right_val
   INTEGER(KIND = I4B) :: quanta = 0, n_states = 0, index, ierr
   !
+  ! Pointer for eigenvalues
   TYPE element
      REAL(KIND = DP) :: energy_val
      TYPE(element), POINTER :: next
@@ -29,6 +30,7 @@ PROGRAM tise_1D_numerov
   !
   TYPE(element), TARGET :: head_eigenval
   TYPE(element), POINTER :: current_eigenval, temp_eigenval
+  !
   !
   ! READING INPUT
   !
@@ -111,9 +113,6 @@ PROGRAM tise_1D_numerov
   !
   vpot = Potf(x_grid)
   !
-  !!write(*,*) x_grid
-  !!write(*,*) 
-  !!write(*,*) vpot
   !
   e_min = MINVAL(vpot)
   x_e_min = x_grid(MINLOC(ARRAY = vpot, DIM = 1))

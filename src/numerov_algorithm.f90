@@ -26,8 +26,21 @@ MODULE numerov_alg
   CHARACTER(LEN = 64) :: e_filename ! energies file name
   !
   ! Potential external function
-  REAL(KIND = DP), EXTERNAL :: Potf
   !
+  INTERFACE POTF
+     ELEMENTAL FUNCTION Potf(x)
+       USE nrtype
+       USE global_vars
+       USE pot_param
+       !
+       IMPLICIT NONE
+       !
+       ! ARGUMENTS
+       REAL(KIND = DP), INTENT(IN) :: x
+       !
+       REAL(KIND = DP) ::  Potf
+     END FUNCTION Potf
+  END INTERFACE POTF  
   !
 CONTAINS
   !
