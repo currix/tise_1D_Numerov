@@ -3,7 +3,7 @@ ELEMENTAL FUNCTION Potf(x)
   !     WOODS-SAXON 1D POTENTIAL
   !
   USE nrtype
-  USE constants
+  USE global_vars
   USE pot_param
   !
   IMPLICIT NONE
@@ -27,6 +27,5 @@ ELEMENTAL FUNCTION Potf(x)
      AUX = EXP((PARAM_POT(2)+x)/PARAM_POT(3))         
      POTf = PARAM_POT(1)*AUX/(1.0_DP+AUX)
   ENDIF
-  !
   !
 END FUNCTION Potf

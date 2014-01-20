@@ -1,24 +1,24 @@
 BINPATH = ../bin/
 #
 # MORSE POTENTIAL
-tise_1D_morse_SRC = nrtype.f90 numerov_global_vars.f90 phys_constants.f90 numerov_algorithm.f90 \
-pot_param_morse.f90 \
+tise_1D_morse_SRC = nrtype.f90 numerov_global_vars.f90 phys_constants.f90 pot_param.f90 numerov_algorithm.f90 \
+f_morse.f90 \
 tise_1D_numerov.f90
 #
 tise_1D_morse_OBJ = $(tise_1D_morse_SRC:.f90=.o)
 #
 #
 # PTELLER POTENTIAL
-tise_1D_pteller_SRC = nrtype.f90 numerov_global_vars.f90 phys_constants.f90 numerov_algorithm.f90 \
-pot_param_pteller.f90 \
+tise_1D_pteller_SRC = nrtype.f90 numerov_global_vars.f90 phys_constants.f90 pot_param.f90 numerov_algorithm.f90 \
+f_pteller.f90 \
 tise_1D_numerov.f90
 #
 tise_1D_pteller_OBJ = $(tise_1D_pteller_SRC:.f90=.o)
 #
 #
 # WSAXON POTENTIAL
-tise_1D_wsaxon_SRC = nrtype.f90 numerov_global_vars.f90 phys_constants.f90 numerov_algorithm.f90 \
-pot_param_wsaxon.f90 \
+tise_1D_wsaxon_SRC = nrtype.f90 numerov_global_vars.f90 phys_constants.f90 pot_param.f90 numerov_algorithm.f90 \
+f_wsaxon.f90 \
 tise_1D_numerov.f90
 #
 tise_1D_wsaxon_OBJ = $(tise_1D_wsaxon_SRC:.f90=.o)

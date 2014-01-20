@@ -25,6 +25,8 @@ MODULE numerov_alg
   !
   CHARACTER(LEN = 64) :: e_filename ! energies file name
   !
+  ! Potential external function
+  REAL(KIND = DP), EXTERNAL :: Potf
   !
   !
 CONTAINS

@@ -25,3 +25,4 @@ ELEMENTAL FUNCTION Potf(x)
   POTf = PARAM_pot(1)*(AUX*AUX - 2.0_DP*AUX)
   !
 END FUNCTION Potf
+  

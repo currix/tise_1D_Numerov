@@ -2,8 +2,9 @@ ELEMENTAL FUNCTION Potf(x)
   !
   !     POESCHL-TELLER 1D POTENTIAL
   !
+  !
   USE nrtype
-  USE constants
+  USE global_vars
   USE pot_param
   !
   IMPLICIT NONE
@@ -15,8 +16,7 @@ ELEMENTAL FUNCTION Potf(x)
   !
   !     POTENTIAL PARAMETERS
   !     PARAM_POT(1) --> VP0 DEPTH
-  !     PARAM_POT(2) --> RP  RADIUS
-  !     PARAM_POT(3) --> AP0 DIFFUSIVITY
+  !     PARAM_POT(2) --> AP0 DIFFUSIVITY
   !
   REAL(KIND = DP) :: AUX
   !
@@ -24,3 +24,4 @@ ELEMENTAL FUNCTION Potf(x)
   POTf = PARAM_pot(1)/(AUX*AUX)
   !
 END FUNCTION Potf
+
