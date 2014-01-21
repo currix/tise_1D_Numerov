@@ -239,6 +239,7 @@ CONTAINS
     ! Local variables
     REAL(KIND = DP), DIMENSION(:), ALLOCATABLE :: gn, aux_vec, y_left, y_right, y_wf
     REAL(KIND = DP)  :: gn_min, gn_max, delta, nu_min, nu_min_plus, nu_min_minus, norm_con
+    REAL(KIND = DP)  :: wf_der_right, wf_der_left
     INTEGER(KIND = I4B) :: index, ierr
     ! 
     ! Allocate vectors
@@ -332,6 +333,20 @@ CONTAINS
     !
     y_right = y_right / aux_vec(match_p - 2: npoints);
     !
+    !
+    ! Left and right derivatives at the matching point
+    !
+    wf_der_left = ( y_left(match_p + 1) - y_left(match_p - 1)  -&
+         (1.0_DP/8.0_DP)*y_left(match_p + 2) + (1.0_DP/8.0_DP)*y_left(match_p - 2) ) /&
+         (3.0_DP*x_step/2.0_DP) ! Left wf derivative
+    !
+    wf_der_right = ( y_right(match_p + 1) - y_right(match_p - 1)  -&
+         (1.0_DP/8.0_DP)*y_right(match_p + 2) + (1.0_DP/8.0_DP)*y_right(match_p - 2) ) /&
+         (3.0_DP*x_step/2.0_DP) ! Right wf derivative
+    !
+    ! Equate derivatives at the matching point
+    y_right = (wf_der_left/wf_der_right)*y_right
+    !
     ! Unnormalized wf
     y_wf(1:match_p) = y_left(1:match_p)
     y_wf(match_p+1:npoints) = y_right(match_p+1:npoints)
@@ -355,4 +370,6 @@ CONTAINS
     ENDIF
     !
   END SUBROUTINE wf_numerov
+  !
+  !
 END MODULE numerov_alg

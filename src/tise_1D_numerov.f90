@@ -279,7 +279,7 @@ PROGRAM tise_1D_numerov
      ENDDO
      !
      DO index = 1, npoints
-        WRITE(30,*) x_grid(index), wf_matrix(index, 1:n_states)
+        WRITE(30,*) wf_matrix(index, 1:n_states + 1) ! First column is xgrid
      ENDDO
      !
   ENDIF
