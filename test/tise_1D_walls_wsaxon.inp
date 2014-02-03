@@ -1,0 +1,16 @@
+#
+#       INPUT FILE FOR tise_1D_wsaxon 
+#
+&INP_DEBUG iprint = 2 /
+#          
+&INP_X     x_min = -60.0, x_max = 60.0, npoints = 603 /
+#
+#                              V0 (MeV)  R (fm)   a (fm)  walls (fm)
+&INP_POTENTIAL    param_pot =   -50.00,   3.40,    0.5,   40.0,       0.0 /
+#
+&INP_SYSTEM  red_mass = 0.952 /
+#
+&INP_NUMEROV match_p = 300, tol_minpack = 1.0e-05, tol_wf = 10000, delta_engy = 0.5, engy_thresh = 20.0 /
+#
+&INP_OUTPUT  i_wf_save = 1, wf_filename = 'eigenvec_walls_wsaxon.dat', i_e_save = 1, e_filename = 'eigenval_walls_wsaxon.dat' /
+

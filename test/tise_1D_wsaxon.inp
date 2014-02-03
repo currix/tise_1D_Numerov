@@ -3,14 +3,14 @@
 #
 &INP_DEBUG iprint = 1 /
 #          
-&INP_X     x_min = -30.0, x_max = 30.0, npoints = 503 /
+&INP_X     x_min = -40.0, x_max = 40.0, npoints = 1003 /
 #
 #                              V0 (MeV)  R (fm)   a (fm)
-&INP_POTENTIAL    param_pot =   -50.00,   3.40,    0.5,   0.0, 0.0 /
+&INP_POTENTIAL    param_pot =   -45.00,   3.40,    0.5,   0.0, 0.0 /
 #
 &INP_SYSTEM  red_mass = 0.952 /
 #
-&INP_NUMEROV match_p = 200, tol_minpack = 1.0e-06, tol_wf = 1.0e-01, delta_engy = 0.5 /
+&INP_NUMEROV match_p = 450, tol_minpack = 1.0e-06, tol_wf = 1.0e-01, delta_engy = 0.5 /
 #
-&INP_OUTPUT  i_wf_save = 1, wf_filename = 'eigenvec_wsaxon.dat', i_e_save = 1, e_filename = 'eigenval_wsaxon.dat' /
+&INP_OUTPUT  i_wf_save = 1, wf_filename = 'eigenvec_wsaxon.dat', i_e_save = 1, e_filename = 'eigenval_wsaxon.dat',  i_sum_rules = 1 /
 

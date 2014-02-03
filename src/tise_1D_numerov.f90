@@ -14,13 +14,13 @@ PROGRAM tise_1D_numerov
   IMPLICIT NONE
   !
   !
-  REAL(KIND = DP) :: energy, eigenvalue, e_min, x_e_min, delta_engy, engy_thresh = 0.0_DP, tol_minpack, tol_wf, wdiff0, wdiff1
+  REAL(KIND = DP) :: energy, eigenvalue, e_min, x_e_min, delta_engy, engy_thresh = 0.0_DP, tol_minpack, tol_wf, wdiff0, wdiff1 
   REAL(KIND = DP), DIMENSION(4) :: eig_result
   REAL(KIND = DP), DIMENSION(1) :: eigenval, diff_wf_val
   REAL(KIND = DP), DIMENSION(:), ALLOCATABLE :: en_matrix
   REAL(KIND = DP), DIMENSION(:,:), ALLOCATABLE :: wf_matrix
   REAL(KIND = DP) :: norm_val, right_val
-  INTEGER(KIND = I4B) :: quanta = 0, n_states = 0, index, ierr
+  INTEGER(KIND = I4B) :: quanta = 0, n_states = 0, index, ierr, i_sum_rules
   !
   ! Pointer for eigenvalues
   TYPE element
@@ -32,6 +32,61 @@ PROGRAM tise_1D_numerov
   TYPE(element), POINTER :: current_eigenval, temp_eigenval
   !
   !
+  INTERFACE X_SUM_RULE
+     SUBROUTINE X_SUM_RULE(nstates, wf_matrix)
+       !
+       !
+       USE nrtype
+       USE phys_constants
+       USE global_vars
+       !
+       IMPLICIT NONE
+       !
+       ! ARGUMENTS
+       INTEGER(KIND = I4B), INTENT(IN) :: nstates
+       REAL(KIND = DP), DIMENSION(:,:), INTENT(IN) :: wf_matrix
+       !
+     END SUBROUTINE X_SUM_RULE
+  END INTERFACE X_SUM_RULE
+  !
+  INTERFACE X2_SUM_RULE
+     SUBROUTINE X2_SUM_RULE(nstates, wf_matrix)
+       !
+       ! SUM_i/=2 |<AVEC(2)|X^2|AVEC(i)>|^2 = <AVEC(2)|Y^2|AVEC(2)> - <AVEC(2)|Y|AVEC(2)>^2 
+       ! where Y = X^2 - <AVEC(2)|X^2|AVEC(2)>
+       ! by LauPK
+       !
+       USE nrtype
+       USE phys_constants
+       USE global_vars
+       !
+       IMPLICIT NONE
+       !
+       ! ARGUMENTS
+       INTEGER(KIND = I4B), INTENT(IN) :: nstates
+       REAL(KIND = DP), DIMENSION(:,:), INTENT(IN) :: wf_matrix
+       !
+     END SUBROUTINE X2_SUM_RULE
+  END INTERFACE X2_SUM_RULE
+  !
+  INTERFACE EW_SUM_RULE
+     SUBROUTINE EW_SUM_RULE(nstates, wf_matrix)
+       !
+       ! by LauPK
+       !
+       USE nrtype
+       USE phys_constants
+       USE global_vars
+       !
+       IMPLICIT NONE
+       !
+       ! ARGUMENTS
+       INTEGER(KIND = I4B), INTENT(IN) :: nstates
+       REAL(KIND = DP), DIMENSION(:,:), INTENT(IN) :: wf_matrix
+       !
+     END SUBROUTINE EW_SUM_RULE
+  END INTERFACE EW_SUM_RULE
+  !
   ! READING INPUT
   !
   NAMELIST/INP_DEBUG/ iprint
@@ -39,7 +94,7 @@ PROGRAM tise_1D_numerov
   NAMELIST/INP_POTENTIAL/ param_pot
   NAMELIST/INP_SYSTEM/ red_mass
   NAMELIST/INP_NUMEROV/ match_p, tol_minpack, tol_wf, delta_engy
-  NAMELIST/INP_OUTPUT/  i_wf_save, wf_filename, i_e_save, e_filename
+  NAMELIST/INP_OUTPUT/  i_wf_save, wf_filename, i_e_save, e_filename, i_sum_rules
   !
   READ(UNIT=*,NML=INP_DEBUG)
   !
@@ -85,7 +140,7 @@ PROGRAM tise_1D_numerov
   IF (iprint > 1) THEN 
      WRITE(*,*) "iprint = ", iprint
      WRITE(*,*)
-     WRITE(*,*) "wf save = ", i_wf_save, ", wf filename = ", wf_filename
+     WRITE(*,*) "wf save = ", i_wf_save, ", wf filename = ", wf_filename, "sum rules = ",  i_sum_rules
      WRITE(*,*)
      WRITE(*,*) "e save = ", i_e_save, ", e filename = ", e_filename
   ENDIF
@@ -281,6 +336,21 @@ PROGRAM tise_1D_numerov
      DO index = 1, npoints
         WRITE(30,*) wf_matrix(index, 1:n_states + 1) ! First column is xgrid
      ENDDO
+     !
+  ENDIF
+  !
+  ! SUM RULES CALCULATION 
+  !
+  IF(i_sum_rules /= 0) THEN
+     !
+     ! SUM RULES --- X operator
+     CALL X_SUM_RULE(n_states+1, wf_matrix)
+     !
+     ! SUM RULES  --- X2 operator
+     CALL X2_SUM_RULE(n_states+1, wf_matrix)
+     !
+     ! ENERGY  WEIGHTED SUM RULES --- X2 operator
+     CALL EW_SUM_RULE(n_states+1, wf_matrix)
      !
   ENDIF
   !
