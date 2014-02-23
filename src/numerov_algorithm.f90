@@ -225,16 +225,14 @@ CONTAINS
     !
   END SUBROUTINE wf_numerov_diff_min
   !
-  SUBROUTINE wf_numerov(quanta, energy, wf_matrix)
+  SUBROUTINE wf_numerov(energy, wf_vector)
     !
-    ! number of quanta
-    INTEGER(KIND = I4B), INTENT(IN) :: quanta
     !
     ! eigenvalue
     REAL(KIND = DP), INTENT(IN) :: energy
     !
-    ! eigenfunctions
-    REAL(KIND = DP), DIMENSION(:,:), INTENT(OUT) :: wf_matrix
+    ! eigenfunction
+    REAL(KIND = DP), DIMENSION(:), INTENT(OUT) :: wf_vector
     !
     ! Local variables
     REAL(KIND = DP), DIMENSION(:), ALLOCATABLE :: gn, aux_vec, y_left, y_right, y_wf
@@ -358,16 +356,7 @@ CONTAINS
     CALL simpsn(npoints, x_step, y_wf**2, norm_con)
     y_wf = y_wf/SQRT(norm_con)
     !
-    IF (i_wf_save > 0) THEN
-       !
-       IF (quanta == 0) THEN
-          wf_matrix(1:npoints,1) = x_grid(1:npoints)
-          wf_matrix(1:npoints,2) = y_wf(1:npoints)
-       ELSE
-          wf_matrix(1:npoints,quanta + 2) = y_wf(1:npoints)
-       ENDIF
-       !
-    ENDIF
+    wf_vector = y_wf
     !
   END SUBROUTINE wf_numerov
   !

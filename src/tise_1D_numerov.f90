@@ -3,6 +3,8 @@ PROGRAM tise_1D_numerov
   ! Main program to solve the time independent Schroedinger equation in 
   ! one dimension using a Numerov approach
   !
+  ! Bound states calculation
+  !
   ! by Currix TM
   !
   USE nrtype
@@ -14,10 +16,12 @@ PROGRAM tise_1D_numerov
   IMPLICIT NONE
   !
   !
-  REAL(KIND = DP) :: energy, eigenvalue, e_min, x_e_min, delta_engy, engy_thresh = 0.0_DP, tol_minpack, tol_wf, wdiff0, wdiff1 
+  REAL(KIND = DP) :: energy, eigenvalue, e_min, x_e_min, delta_engy, engy_thresh = 0.0_DP 
+  REAL(KIND = DP) :: tol_minpack, tol_wf
+  REAL(KIND = DP) :: wdiff0, wdiff1 
   REAL(KIND = DP), DIMENSION(4) :: eig_result
   REAL(KIND = DP), DIMENSION(1) :: eigenval, diff_wf_val
-  REAL(KIND = DP), DIMENSION(:), ALLOCATABLE :: en_matrix
+  REAL(KIND = DP), DIMENSION(:), ALLOCATABLE :: en_matrix, wf_vector
   REAL(KIND = DP), DIMENSION(:,:), ALLOCATABLE :: wf_matrix
   REAL(KIND = DP) :: norm_val, right_val
   INTEGER(KIND = I4B) :: quanta = 0, n_states = 0, index, ierr, i_sum_rules
@@ -168,6 +172,16 @@ PROGRAM tise_1D_numerov
   !
   vpot = Potf(x_grid)
   !
+  !    WAVE FUNCTION VECTOR
+  !
+  ALLOCATE(wf_vector(1:npoints), STAT = ierr)    
+  IF (ierr /= 0) THEN
+     PRINT*, "wf_vector allocation request denied."
+     STOP
+  ENDIF
+  !
+  !
+  ! Main Loop
   !
   e_min = MINVAL(vpot)
   x_e_min = x_grid(MINLOC(ARRAY = vpot, DIM = 1))
@@ -216,9 +230,9 @@ PROGRAM tise_1D_numerov
         ! 
         ! Check if the eigenvalue found is in the interval under study
         !
-        IF (ABS(eigenvalue) > ABS(energy) .OR. ABS(eigenvalue) < ABS(energy + delta_engy) ) THEN ! Check whether the eigenvalue found is out of the search interval
+        IF (eigenvalue < energy .OR. eigenvalue > energy + delta_engy .OR. eigenvalue > 0 ) THEN ! Check whether the eigenvalue found is out of the search interval
            !
-           IF ( iprint > 1 ) WRITE(*,*) " Wrong eigenvalue buddy... Keep on searching!\n"
+           IF ( iprint > 1 ) WRITE(*,*) " Wrong eigenvalue buddy... Keep on searching!"
            !
         ELSE
            !
@@ -227,24 +241,41 @@ PROGRAM tise_1D_numerov
            eig_result = wf_Numerov_lr(eigenvalue)
            !
            ! Renormalize output
-           norm_val = 1.0_DP/eig_result(1)
-           right_val = eig_result(3)/eig_result(4)
-           eig_result(1) = 1.0_DP ! wfl
-           eig_result(2) = eig_result(2)*right_val*norm_val ! wfr
-           eig_result(3) = eig_result(3)*norm_val ! wfpl
-           eig_result(4) = eig_result(3) ! wfpr
+           norm_val = 1.0_DP/eig_result(3)
+           right_val = 1.0_DP/eig_result(4)
+           eig_result(1) = eig_result(1)*norm_val  ! wfl
+           eig_result(2) = eig_result(2)*right_val ! wfr
+           eig_result(3) = 1.0_DP ! wfpl
+           eig_result(4) = 1.0_DP ! wfpr
            !
            IF ( iprint > 1 ) THEN
               !
               WRITE(*,*) "Possible eigenvalue = ", eigenvalue
               !
-              WRITE(*,*) "Matching data ", eig_result
-              WRITE(*,*) "Matching data ",eig_result(1)-eig_result(2), &
+              WRITE(*,*) "Matching data  Ia ", eig_result
+              WRITE(*,*) "Matching data IIa ",eig_result(1)-eig_result(2), &
                    2*ABS((eig_result(1)-eig_result(2))/(eig_result(1)+eig_result(2)))
               !
            ENDIF
            !
-           IF (2*ABS((eig_result(1)-eig_result(2))/(eig_result(1)+eig_result(2))) < tol_wf) THEN
+           ! Build normalized wave function
+           !
+           CALL wf_numerov(eigenvalue, wf_vector)
+           norm_val = wf_vector(match_p)/eig_result(1)
+           eig_result(1) = eig_result(1)*norm_val
+           eig_result(2) = eig_result(2)*norm_val
+           !
+           IF ( iprint >= 1 ) THEN
+              !
+              WRITE(*,*) "Possible eigenvalue = ", eigenvalue
+              !
+              WRITE(*,*) "Matching data  Ib ", eig_result
+              WRITE(*,*) "Matching data IIb ",eig_result(1)-eig_result(2), &
+                   2*ABS((eig_result(1)-eig_result(2))/(eig_result(1)+eig_result(2)))
+              !
+           ENDIF
+           !
+           IF ( ABS(eig_result(1)-eig_result(2)) < tol_wf ) THEN
               !
               IF ( iprint >= 1 ) THEN
                  !
@@ -329,8 +360,12 @@ PROGRAM tise_1D_numerov
         STOP
      ENDIF
      !
+     ! First column x_grid
+     wf_matrix(1:npoints,1) = x_grid(1:npoints)
+     !
      DO quanta = 0, n_states - 1
-        CALL wf_numerov(quanta, en_matrix(quanta + 1), wf_matrix)
+        CALL wf_numerov(en_matrix(quanta + 1), wf_vector)
+        wf_matrix(1:npoints,quanta + 2) = wf_vector(1:npoints)
      ENDDO
      !
      DO index = 1, npoints
