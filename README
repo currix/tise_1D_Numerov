@@ -2,6 +2,22 @@ Fortran 90 code to compute the eigenvalues and eigenvectors of a
 1D potential solving the Schroedinger equation using a Numerov 
 approximation. 
 
-Makes use of minpack and intlib libraries.
+Programs
+
+Energies and wave functions for bound states
+
+tise_1D_morse   : 1D Morse potential
+tise_1D_pteller : 1D Poeschl-Teller potential
+tise_1D_wsaxon  : 1D Woods-Saxon potential
+
+
+Energies and wave functions for potential in a rigid wall box
+
+tise_1D_morse_box   : 1D Morse potential
+tise_1D_pteller_box : 1D Poeschl-Teller potential
+tise_1D_wsaxon_box  : 1D Woods-Saxon potential
+
+
+Makes use of minpack and intlib libraries (see LICENSES file).
 
 by Currix TM
